@@ -63,7 +63,7 @@ static lowpass_t lowpassFilter;
 
 uint16_t batteryAdcToVoltage(uint16_t src)  // in perfect world vbatscale should be 33 for 3.3v
 {                                           //  vbatmincellvoltage is calculated by ((HIGH_RESISTOR+LOW_RESISTOR)/LOW_RESISTOR) stored as * 2
-    return ((uint16_t)((float)src * (float)((float)(batteryConfig->vbatscale/3)/0xFFF) * (float)(batteryConfig->vbatmincellvoltage/2)));
+    return ((uint16_t)((float)src * (float)((float)(batteryConfig->vbatscale/3.0)/0xFFF) * (float)(batteryConfig->vbatmincellvoltage/2.0)));
 // used for debugging    return(batteryConfig->vbatmincellvoltage);
 }
 
