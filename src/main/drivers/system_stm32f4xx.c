@@ -138,10 +138,11 @@ void enableGPIOPowerUsageAndNoiseReductions(void)
     GPIO_InitStructure.GPIO_Pin  = GPIO_Pin_All;
     GPIO_InitStructure.GPIO_Pin &= ~(GPIO_Pin_11 | GPIO_Pin_12); // leave USB D+/D- alone
 
-    GPIO_InitStructure.GPIO_Pin &= ~(GPIO_Pin_13 | GPIO_Pin_14); // leave JTAG pins alone
+    GPIO_InitStructure.GPIO_Pin &= ~(GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15); // leave JTAG pins alone
     GPIO_Init(GPIOA, &GPIO_InitStructure);
 
     GPIO_InitStructure.GPIO_Pin  = GPIO_Pin_All;
+    GPIO_InitStructure.GPIO_Pin  &= ~(GPIO_Pin_3 | GPIO_Pin_4);// leave JTAG pins alone
     GPIO_Init(GPIOB, &GPIO_InitStructure);
 
     GPIO_InitStructure.GPIO_Pin  = GPIO_Pin_All;

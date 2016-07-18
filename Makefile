@@ -24,7 +24,7 @@ OPTIONS		?=
 OPBL ?=no
 
 # Debugger optons, must be empty or GDB
-DEBUG ?= 
+DEBUG ?=
 
 # Serial port/Device for flashing
 SERIAL_DEVICE	?= $(firstword $(wildcard /dev/ttyUSB*) no-port-found)
@@ -41,10 +41,11 @@ FORKNAME			 = raceflight
 CC3D_TARGETS = CC3D CC3D_OPBL
 F1_TARGETS = NAZE OLIMEXINO CJMCU EUSTM32F103RC PORT103R ALIENWIIF1 AFROMINI
 F3_TARGETS = STM32F3DISCOVERY CHEBUZZF3 NAZE32PRO SPRACINGF3 IRCFUSIONF3 SPARKY ALIENWIIF3 COLIBRI_RACE MOTOLAB RMDO LUX_RACE
-F4_TARGETS = REVO REVO_OPBL SPARKY2 SPARKY2_OPBL REVONANO REVONANO_OPBL ALIENFLIGHTF4 BLUEJAYF4 VRCORE QUANTON KKNGF4
+F4_TARGETS = REVO REVO_OPBL SPARKY2 SPARKY2_OPBL REVONANO REVONANO_OPBL ALIENFLIGHTF4 BLUEJAYF4 VRCORE QUANTON KKNGF4 ELLE0
 
 F405_TARGETS = REVO REVO_OPBL SPARKY2 SPARKY2_OPBL ALIENFLIGHTF4 BLUEJAYF4 VRCORE QUANTON KKNGF4
 F405_TARGETS_16 = QUANTON
+F405_TARGETS_25 = ELLE0
 F411_TARGETS = REVONANO REVONANO_OPBL
 
 VALID_TARGETS	 = $(F1_TARGETS) $(CC3D_TARGETS) $(F3_TARGETS) $(F4_TARGETS)
@@ -120,7 +121,7 @@ INCLUDE_DIRS := $(INCLUDE_DIRS) \
 VPATH := $(VPATH):$(USBFS_DIR)/src
 
 DEVICE_STDPERIPH_SRC := $(DEVICE_STDPERIPH_SRC)\
-		   $(USBPERIPH_SRC) 
+		   $(USBPERIPH_SRC)
 
 endif
 
@@ -131,7 +132,7 @@ DEVICE_FLAGS = -DSTM32F303xC -DSTM32F303
 TARGET_FLAGS = -D$(TARGET)
 ifeq ($(TARGET),CHEBUZZF3)
 # CHEBUZZ is a VARIANT of STM32F3DISCOVERY
-TARGET_FLAGS := $(TARGET_FLAGS) -DSTM32F3DISCOVERY 
+TARGET_FLAGS := $(TARGET_FLAGS) -DSTM32F3DISCOVERY
 endif
 
 ifeq ($(TARGET),$(filter $(TARGET),RMDO IRCFUSIONF3))
@@ -155,7 +156,7 @@ EXCLUDES = stm32f4xx_crc.c \
 		stm32f4xx_lptim.c \
 		stm32f4xx_qspi.c \
 		stm32f4xx_spdifrx.c
-		
+
 
 ifeq ($(TARGET),$(filter $(TARGET), $(F411_TARGETS)))
 EXCLUDES += stm32f4xx_fsmc.c
@@ -209,6 +210,10 @@ LD_SCRIPT	 = $(LINKER_DIR)/stm32_flash_f411.ld
 else ifeq ($(TARGET),$(filter $(TARGET),$(F405_TARGETS_16)))
 DEVICE_FLAGS = -DSTM32F40_41xxx
 DEVICE_FLAGS += -DHSE_VALUE=16000000
+LD_SCRIPT	 = $(LINKER_DIR)/stm32_flash_f405.ld
+else ifeq ($(TARGET),$(filter $(TARGET),$(F405_TARGETS_25)))
+DEVICE_FLAGS = -DSTM32F40_41xxx
+DEVICE_FLAGS += -DHSE_VALUE=25000000
 LD_SCRIPT	 = $(LINKER_DIR)/stm32_flash_f405.ld
 else ifeq ($(TARGET),$(filter $(TARGET),$(F405_TARGETS)))
 DEVICE_FLAGS = -DSTM32F40_41xxx
@@ -285,7 +290,7 @@ INCLUDE_DIRS := $(INCLUDE_DIRS) \
 VPATH := $(VPATH):$(USBFS_DIR)/src
 
 DEVICE_STDPERIPH_SRC := $(DEVICE_STDPERIPH_SRC) \
-		   $(USBPERIPH_SRC) 
+		   $(USBPERIPH_SRC)
 
 endif
 
@@ -311,7 +316,7 @@ TARGET_DIR = $(ROOT)/src/main/target/NAZE
 endif
 
 ifeq ($(TARGET),$(filter $(TARGET), $(CC3D_TARGETS)))
-TARGET_FLAGS := $(TARGET_FLAGS) -DCC3D 
+TARGET_FLAGS := $(TARGET_FLAGS) -DCC3D
 TARGET_DIR = $(ROOT)/src/main/target/CC3D
 endif
 
@@ -459,7 +464,7 @@ STM32F4xx_COMMON_SRC = \
 		   drivers/timer.c \
 		   drivers/timer_stm32f4xx.c \
 		   drivers/flash_m25p16.c \
-		   io/flashfs.c 
+		   io/flashfs.c
 
 VCP_SRC = \
 		   vcp/hw_config.c \
@@ -655,7 +660,7 @@ CC3D_SRC = \
 		   $(HIGHEND_SRC) \
 		   $(COMMON_SRC) \
 		   $(VCP_SRC)
-		
+
 REVO_SRC = $(STM32F4xx_COMMON_SRC) \
 		   drivers/accgyro_spi_mpu6000.c \
 		   drivers/barometer_ms5611.c \
@@ -704,7 +709,7 @@ ALIENFLIGHTF4_SRC = $(STM32F4xx_COMMON_SRC) \
 		   $(HIGHEND_SRC) \
 		   $(COMMON_SRC) \
 		   $(VCPF4_SRC)
-		   
+
 BLUEJAYF4_SRC = $(STM32F4xx_COMMON_SRC) \
 		   drivers/accgyro_spi_mpu9250.c \
 		   drivers/barometer_ms5611.c \
@@ -719,6 +724,13 @@ QUANTON_SRC = $(STM32F4xx_COMMON_SRC) \
 		   $(COMMON_SRC) \
 		   $(VCPF4_SRC)
 
+ELLE0_SRC = $(STM32F4xx_COMMON_SRC) \
+		   drivers/accgyro_spi_mpu9250.c \
+		   drivers/compass_hmc5883l.c \
+		   $(HIGHEND_SRC) \
+		   $(COMMON_SRC) \
+		   $(VCPF4_SRC)
+
 VRCORE_SRC = $(STM32F4xx_COMMON_SRC) \
 		   drivers/accgyro_spi_mpu9250.c \
 		   drivers/barometer_ms5611.c \
@@ -728,7 +740,7 @@ VRCORE_SRC = $(STM32F4xx_COMMON_SRC) \
 		   $(HIGHEND_SRC) \
 		   $(COMMON_SRC) \
 		   $(VCPF4_SRC)
-		   
+
 STM32F30x_COMMON_SRC = \
 		   startup_stm32f30x_md_gcc.S \
 		   drivers/adc.c \
@@ -815,7 +827,7 @@ LUX_RACE_SRC = \
 		   $(HIGHEND_SRC) \
 		   $(COMMON_SRC) \
 		   $(VCP_SRC)
-		   
+
 SPARKY_SRC = \
 		   $(STM32F30x_COMMON_SRC) \
 		   drivers/display_ug2864hsweg01.c \
@@ -915,7 +927,7 @@ LTO_FLAGS	 = $(OPTIMIZE)
 else
 ifeq ($(TARGET),$(filter $(TARGET),SPARKY2 SPARKY2_OPBL))
 OPTIMIZE	 = -O2
-else ifeq ($(TARGET),$(filter $(TARGET),REVO REVO_OPBL REVONANO REVONANO_OPBL ALIENFLIGHTF4 BLUEJAYF4 VRCORE KKNGF4))
+else ifeq ($(TARGET),$(filter $(TARGET),REVO REVO_OPBL REVONANO REVONANO_OPBL ALIENFLIGHTF4 BLUEJAYF4 VRCORE KKNGF4 ELLE0))
 OPTIMIZE	 = -O2
 else
 OPTIMIZE	 = -Os
@@ -998,7 +1010,7 @@ CLEAN_ARTIFACTS := $(TARGET_BIN)
 else
 CLEAN_ARTIFACTS := $(TARGET_HEX)
 endif
-CLEAN_ARTIFACTS += $(TARGET_ELF) $(TARGET_OBJS) $(TARGET_MAP) 
+CLEAN_ARTIFACTS += $(TARGET_ELF) $(TARGET_OBJS) $(TARGET_MAP)
 
 # List of buildable ELF files and their object dependencies.
 # It would be nice to compute these lists, but that seems to be just beyond make.
@@ -1011,7 +1023,7 @@ $(TARGET_BIN): $(TARGET_ELF)
 
 $(TARGET_ELF):  $(TARGET_OBJS)
 	$(CC) -o $@ $^ $(LDFLAGS)
-	$(SIZE) $(TARGET_ELF) 
+	$(SIZE) $(TARGET_ELF)
 
 # Compile
 $(OBJECT_DIR)/$(TARGET)/%.o: %.c
